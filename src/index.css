@@ -1,0 +1,491 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* استيراد خطوط Amiri */
+@font-face {
+  font-family: 'Amiri';
+  src: url('/fonts/Amiri-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amiri';
+  src: url('/fonts/Amiri-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amiri';
+  src: url('/fonts/Amiri-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amiri';
+  src: url('/fonts/Amiri-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amiri Quran';
+  src: url('/fonts/AmiriQuran.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Amiri', 'Cairo', sans-serif;
+  direction: rtl;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(-45deg, #ffffff, #fefefe, #f9f9f9, #fafafa);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(201, 169, 97, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(201, 169, 97, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(201, 169, 97, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@layer utilities {
+  .gradient-luxury {
+    background: linear-gradient(135deg, #1a2332 0%, #2d3e50 100%);
+  }
+  
+  .gradient-gold {
+    background: linear-gradient(135deg, #C9A961 0%, #B8984F 100%);
+  }
+  
+  .gradient-overlay {
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+  }
+  
+  .luxury-shadow {
+    box-shadow: 0 4px 24px rgba(201, 169, 97, 0.15);
+  }
+  
+  .luxury-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(201, 169, 97, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .luxury-card:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 12px 40px rgba(201, 169, 97, 0.25);
+    transform: translateY(-6px);
+  }
+  
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #C9A961 0%, #B8984F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .floating {
+    animation: floating 6s ease-in-out infinite;
+  }
+  
+  @keyframes floating {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .wave {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  .wave-animation {
+    animation: wave 10s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+  }
+  
+  @keyframes wave {
+    0% {
+      transform: translateX(0) translateZ(0) scaleY(1);
+    }
+    50% {
+      transform: translateX(-25%) translateZ(0) scaleY(0.8);
+    }
+    100% {
+      transform: translateX(0) translateZ(0) scaleY(1);
+    }
+  }
+  
+  /* Scroll Reveal Animations */
+  .observe {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .observe.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Hero Image Animations */
+  .hero-images {
+    animation: fadeInScale 1s ease-out 0.3s both;
+  }
+  
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .image-card {
+    position: relative;
+    animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  
+  .image-card-1 {
+    animation-delay: 0.2s;
+  }
+  
+  .image-card-2 {
+    animation-delay: 0.35s;
+  }
+  
+  .image-card-3 {
+    animation-delay: 0.5s;
+  }
+  
+  .image-card-4 {
+    animation-delay: 0.65s;
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Hero Badge Animation */
+  .hero-badge {
+    animation: badgePulse 0.6s ease-out;
+  }
+  
+  @keyframes badgePulse {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Hero Title Gradient Animation */
+  .hero-title-gradient {
+    animation: fadeInUp 0.8s ease-out 0.2s both, gradientShimmer 3s ease-in-out infinite;
+  }
+  
+  @keyframes gradientShimmer {
+    0%, 100% {
+      filter: brightness(1);
+    }
+    50% {
+      filter: brightness(1.2);
+    }
+  }
+  
+  /* Hero Description Animation */
+  .hero-description {
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+  }
+  
+  /* Hero Buttons Animation */
+  .hero-buttons {
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+  }
+  
+  /* Button Pulse Animation */
+  .button-pulse {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .button-pulse::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .button-pulse:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  /* Category Card Animation */
+  .category-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .category-card:hover {
+    transform: translateY(-8px) scale(1.02);
+  }
+  
+  /* Category Card Logged In */
+  .category-card-logged {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border-radius: 1.5rem !important;
+  }
+  
+  .category-card-logged:hover {
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+  }
+  
+  /* Shine Effect */
+  .shine-effect {
+    pointer-events: none;
+  }
+  
+  /* Feature Card Animation */
+  .feature-card {
+    animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  
+  /* CTA Section Animation */
+  .cta-section {
+    animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Parallax Hover Effect for Images */
+  .image-card img {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .image-card:hover img {
+    transform: scale(1.1);
+  }
+  
+  /* Smooth Scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #C9A961 0%, #B8984F 100%);
+    border-radius: 6px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #B8984F 0%, #A17F3E 100%);
+  }
+  
+  /* Loading Animation for Images */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+  
+  .image-loading {
+    animation: shimmer 2s infinite;
+    background: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+    background-size: 1000px 100%;
+  }
+  
+  /* Stagger Animation Delays */
+  .observe:nth-child(1) { transition-delay: 0.1s; }
+  .observe:nth-child(2) { transition-delay: 0.2s; }
+  .observe:nth-child(3) { transition-delay: 0.3s; }
+  .observe:nth-child(4) { transition-delay: 0.4s; }
+  .observe:nth-child(5) { transition-delay: 0.5s; }
+  
+  /* Reduce Motion for Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  
+  /* Bottom Navigation Animations */
+  .bottom-nav {
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.98);
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slide-down {
+    from {
+      transform: translateX(-50%) translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .animate-slide-down {
+    animation: slide-down 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Safe Area for iPhone notch */
+  @supports (padding: max(0px)) {
+    .bottom-nav {
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+  }
+  
+  /* Emoji Bounce Animation */
+  .emoji-bounce {
+    animation: emojiBounce 2s ease-in-out infinite;
+  }
+  
+  @keyframes emojiBounce {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-10px) scale(1.05);
+    }
+  }
+  
+  .feature-card:hover .emoji-bounce {
+    animation: emojiSpin 0.6s ease-in-out;
+  }
+  
+  @keyframes emojiSpin {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.2);
+    }
+    100% {
+      transform: rotate(360deg) scale(1.25);
+    }
+  }
+}
+
