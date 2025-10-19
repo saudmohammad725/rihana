@@ -60,6 +60,9 @@ function BookingForm({ serviceType, serviceDetails, currentUser }) {
   const [success, setSuccess] = useState(false)
   const [showMap, setShowMap] = useState(false)
   const [mapCenter, setMapCenter] = useState({ lat: 24.7136, lng: 46.6753 }) // الرياض كمركز افتراضي
+  const [showPayment, setShowPayment] = useState(false)
+  const [paymentMethod, setPaymentMethod] = useState('')
+  const [bookingId, setBookingId] = useState(null)
 
   // التحقق من صحة رقم الجوال
   const validatePhone = (phone) => {
@@ -174,31 +177,225 @@ function BookingForm({ serviceType, serviceDetails, currentUser }) {
       return
     }
 
+    // حفظ البيانات مؤقتاً وعرض شاشة الدفع
+    const newBookingId = 'booking_' + Date.now()
+    setBookingId(newBookingId)
+    setShowPayment(true)
+  }
+
+  const handleDemoBooking = () => {
+    if (!validateForm()) {
+      return
+    }
+
+    // إنشاء حجز تجريبي مباشرة بدون دفع
+    const newBookingId = 'booking_' + Date.now()
+    const bookingData = {
+      id: newBookingId,
+      serviceType,
+      serviceDetails,
+      ...formData,
+      userId: currentUser?.uid || 'demo-user-123',
+      userEmail: currentUser?.email || 'demo@rihana.com',
+      status: 'تحت الإجراء',
+      paymentStatus: 'غير مطلوب',
+      paymentMethod: 'تجريبي',
+      totalAmount: calculateTotal(),
+      paidAmount: 0,
+      createdAt: new Date().toISOString()
+    }
+
+    // حفظ في localStorage
+    const existingBookings = JSON.parse(localStorage.getItem('bookings') || '[]')
+    existingBookings.push(bookingData)
+    localStorage.setItem('bookings', JSON.stringify(existingBookings))
+
+    setSuccess(true)
+    setTimeout(() => {
+      navigate('/orders')
+    }, 2000)
+  }
+
+  const handlePayment = () => {
+    if (!paymentMethod) {
+      alert('الرجاء اختيار طريقة الدفع')
+      return
+    }
+
     setLoading(true)
-    
-    try {
+
+    // محاكاة عملية الدفع
+    setTimeout(() => {
       const bookingData = {
+        id: bookingId,
         serviceType,
         serviceDetails,
         ...formData,
-        userId: currentUser?.uid,
-        userEmail: currentUser?.email,
-        status: 'pending',
+        userId: currentUser?.uid || 'demo-user-123',
+        userEmail: currentUser?.email || 'demo@rihana.com',
+        status: 'مؤكد',
+        paymentStatus: 'تم دفع 50%',
+        paymentMethod,
+        totalAmount: calculateTotal(),
+        paidAmount: calculateTotal() / 2,
+        remainingAmount: calculateTotal() / 2,
         createdAt: new Date().toISOString()
       }
 
-      await bookingsAPI.create(bookingData)
-      
+      // حفظ في localStorage
+      const existingBookings = JSON.parse(localStorage.getItem('bookings') || '[]')
+      existingBookings.push(bookingData)
+      localStorage.setItem('bookings', JSON.stringify(existingBookings))
+
+      setLoading(false)
       setSuccess(true)
       setTimeout(() => {
-        navigate('/cart')
+        navigate('/orders')
       }, 2000)
-    } catch (error) {
-      console.error('Booking error:', error)
-      alert('حدث خطأ أثناء إنشاء الحجز. الرجاء المحاولة مرة أخرى.')
-    } finally {
-      setLoading(false)
-    }
+    }, 1500)
+  }
+
+  const calculateTotal = () => {
+    const hours = parseInt(formData.hours) || 1
+    const basePrice = serviceDetails?.price || 50
+    return hours * basePrice
+  }
+
+  if (showPayment) {
+    const total = calculateTotal()
+    const deposit = total / 2
+
+    return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
+            <div className="text-center mb-10">
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">إتمام الدفع</h1>
+              <div className="h-1 w-32 bg-gradient-to-r from-luxury-gold to-luxury-darkGold mx-auto rounded-full"></div>
+            </div>
+
+            {/* ملخص الحجز */}
+            <div className="bg-gray-50 rounded-2xl p-6 mb-8">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">ملخص الحجز</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">إجمالي المبلغ:</span>
+                  <span className="font-bold text-gray-800">{total} ريال</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">مبلغ الضمان (50%):</span>
+                  <span className="font-bold text-luxury-gold">{deposit} ريال</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">المبلغ المتبقي:</span>
+                  <span className="font-bold text-gray-800">{deposit} ريال</span>
+                </div>
+              </div>
+              <p className="text-sm text-gray-500 mt-4">* سيتم دفع المبلغ المتبقي عند استلام الخدمة</p>
+            </div>
+
+            {/* خيارات الدفع */}
+            <div className="space-y-4 mb-8">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">اختر طريقة الدفع</h3>
+              
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('visa')}
+                className={`w-full p-6 rounded-xl border-2 transition-all ${
+                  paymentMethod === 'visa'
+                    ? 'border-luxury-gold bg-luxury-gold/5'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold">
+                      VISA
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-gray-800">بطاقة فيزا</p>
+                      <p className="text-sm text-gray-500">Visa Card</p>
+                    </div>
+                  </div>
+                  <div className={`w-6 h-6 rounded-full border-2 ${
+                    paymentMethod === 'visa' ? 'border-luxury-gold bg-luxury-gold' : 'border-gray-300'
+                  }`}></div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('mada')}
+                className={`w-full p-6 rounded-xl border-2 transition-all ${
+                  paymentMethod === 'mada'
+                    ? 'border-luxury-gold bg-luxury-gold/5'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                      مدى
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-gray-800">بطاقة مدى</p>
+                      <p className="text-sm text-gray-500">Mada Card</p>
+                    </div>
+                  </div>
+                  <div className={`w-6 h-6 rounded-full border-2 ${
+                    paymentMethod === 'mada' ? 'border-luxury-gold bg-luxury-gold' : 'border-gray-300'
+                  }`}></div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('cash')}
+                className={`w-full p-6 rounded-xl border-2 transition-all ${
+                  paymentMethod === 'cash'
+                    ? 'border-luxury-gold bg-luxury-gold/5'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center text-white text-2xl">
+                      💵
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-gray-800">الدفع نقداً</p>
+                      <p className="text-sm text-gray-500">Cash Payment</p>
+                    </div>
+                  </div>
+                  <div className={`w-6 h-6 rounded-full border-2 ${
+                    paymentMethod === 'cash' ? 'border-luxury-gold bg-luxury-gold' : 'border-gray-300'
+                  }`}></div>
+                </div>
+              </button>
+            </div>
+
+            {/* أزرار التأكيد */}
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => setShowPayment(false)}
+                className="flex-1 px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-bold text-lg transition-all"
+              >
+                رجوع
+              </button>
+              <button
+                type="button"
+                onClick={handlePayment}
+                disabled={loading}
+                className="flex-1 px-6 py-4 bg-luxury-gold hover:bg-luxury-darkGold text-white rounded-xl font-bold text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'جاري الدفع...' : `دفع ${deposit} ريال`}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (success) {
@@ -206,9 +403,9 @@ function BookingForm({ serviceType, serviceDetails, currentUser }) {
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
           <CheckCircle2 className="w-24 h-24 text-green-500 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">تم إرسال طلب الحجز بنجاح!</h2>
-          <p className="text-xl text-gray-600 mb-6">سيتم التواصل معك قريباً</p>
-          <p className="text-gray-500">جاري التحويل إلى سلة الحجوزات...</p>
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">تم تأكيد الحجز بنجاح! 🎉</h2>
+          <p className="text-xl text-gray-600 mb-6">تم دفع مبلغ الضمان بنجاح</p>
+          <p className="text-gray-500">جاري التحويل إلى صفحة الطلبات...</p>
         </div>
       </div>
     )
@@ -435,20 +632,40 @@ function BookingForm({ serviceType, serviceDetails, currentUser }) {
             </div>
 
             {/* أزرار الإرسال */}
-            <div className="flex gap-4 justify-center pt-6">
+            <div className="space-y-4 pt-6">
+              <div className="flex gap-4 justify-center">
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="px-8 py-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-bold text-lg transition-all"
+                >
+                  رجوع
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-8 py-4 bg-luxury-gold hover:bg-luxury-darkGold text-white rounded-lg font-bold text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                >
+                  {loading ? 'جاري الحجز...' : 'تأكيد الحجز ودفع الضمان'}
+                </button>
+              </div>
+              
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">أو</span>
+                </div>
+              </div>
+
               <button
                 type="button"
-                onClick={() => navigate(-1)}
-                className="px-8 py-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-bold text-lg transition-all"
+                onClick={handleDemoBooking}
+                className="w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
               >
-                رجوع
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-8 py-4 bg-luxury-gold hover:bg-luxury-darkGold text-white rounded-lg font-bold text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
-              >
-                {loading ? 'جاري الحجز...' : 'تأكيد الحجز'}
+                <span>🚀</span>
+                <span>حجز تجريبي (بدون دفع)</span>
               </button>
             </div>
           </form>

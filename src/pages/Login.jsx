@@ -39,12 +39,23 @@ function Login({ setIsLoggedIn }) {
         case 'auth/invalid-credential':
           setError('البريد الإلكتروني أو كلمة المرور غير صحيحة')
           break
+        case 'auth/too-many-requests':
+          setError('تم حظر الحساب مؤقتاً بسبب محاولات كثيرة. استخدم زر "تسجيل دخول وهمي للاختبار"')
+          break
         default:
           setError('حدث خطأ في تسجيل الدخول. حاول مرة أخرى')
       }
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleDemoLogin = () => {
+    // تسجيل دخول وهمي للاختبار
+    setIsLoggedIn(true)
+    localStorage.setItem('isLoggedIn', 'true')
+    localStorage.setItem('demoUser', 'true')
+    navigate('/')
   }
 
   return (
@@ -128,6 +139,24 @@ function Login({ setIsLoggedIn }) {
               className="w-full bg-luxury-gold hover:bg-luxury-darkGold text-white py-4 rounded-lg font-bold text-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+            </button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">أو</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-4 rounded-lg font-bold text-lg hover:shadow-lg transition-all flex items-center justify-center gap-2"
+            >
+              <span>🚀</span>
+              <span>تسجيل دخول وهمي للاختبار</span>
             </button>
 
             <div className="text-center">

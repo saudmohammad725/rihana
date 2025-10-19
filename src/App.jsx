@@ -11,6 +11,7 @@ import Drivers from './pages/Drivers'
 import Trips from './pages/Trips'
 import Babysitters from './pages/Babysitters'
 import Cart from './pages/Cart'
+import Orders from './pages/Orders'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
@@ -27,6 +28,26 @@ function App() {
 
   // تتبع حالة تسجيل الدخول وجلب بيانات المستخدم من Supabase
   useEffect(() => {
+    // التحقق من تسجيل الدخول الوهمي
+    const isDemoUser = localStorage.getItem('demoUser')
+    const isLoggedInStorage = localStorage.getItem('isLoggedIn')
+    
+    if (isDemoUser === 'true' && isLoggedInStorage === 'true') {
+      setIsLoggedIn(true)
+      setCurrentUser({
+        uid: 'demo-user-123',
+        email: 'demo@rihana.com',
+        displayName: 'مستخدم تجريبي'
+      })
+      setUserProfile({
+        name: 'مستخدم تجريبي',
+        email: 'demo@rihana.com',
+        phone: '0500000000'
+      })
+      setLoading(false)
+      return
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setIsLoggedIn(true)
@@ -94,7 +115,7 @@ function App() {
 
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <div className="min-h-screen flex flex-col relative">
+      <div className="min-h-screen flex flex-col relative overflow-x-hidden">
         {/* Animated Waves Background */}
         <div className="wave">
           <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="wave-animation" style={{ height: '150px', width: '100%' }}>
@@ -122,6 +143,7 @@ function App() {
               <Route path="/babysitters" element={<Babysitters />} />
               <Route path="/booking/:serviceType" element={<Booking isLoggedIn={isLoggedIn} currentUser={currentUser} />} />
               <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} updateQuantity={updateQuantity} />} />
+              <Route path="/orders" element={<Orders />} />
               <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
               <Route path="/register" element={<Register />} />
               <Route path="/profile" element={<Profile currentUser={currentUser} userProfile={userProfile} setUserProfile={setUserProfile} />} />

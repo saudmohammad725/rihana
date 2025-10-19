@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Home, Briefcase, ShoppingCart, User, LogOut } from 'lucide-react'
+import { Home, Briefcase, ShoppingCart, User, LogOut, Package } from 'lucide-react'
 import { signOut } from 'firebase/auth'
 import { auth } from '../config/firebase'
 
@@ -25,6 +25,11 @@ function BottomNav({ cartCount, isLoggedIn, setIsLoggedIn, currentUser }) {
       badge: cartCount
     },
     {
+      name: 'الطلبات',
+      path: '/orders',
+      icon: Package
+    },
+    {
       name: isLoggedIn ? 'حسابي' : 'حسابي',
       path: isLoggedIn ? '/profile' : '/login',
       icon: User,
@@ -34,7 +39,7 @@ function BottomNav({ cartCount, isLoggedIn, setIsLoggedIn, currentUser }) {
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 border-t border-gray-200 shadow-2xl z-50 bottom-nav">
-      <div className="grid grid-cols-4 h-16">
+      <div className="grid grid-cols-5 h-16">
         {navItems.map((item, index) => {
           const Icon = item.icon
           const isActive = location.pathname === item.path

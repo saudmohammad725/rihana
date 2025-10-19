@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { ShoppingCart, User, LogOut, Settings, UserCircle2 } from 'lucide-react'
+import { ShoppingCart, User, LogOut, Settings, UserCircle2, Package } from 'lucide-react'
 import { signOut } from 'firebase/auth'
 import { auth } from '../config/firebase'
 import { useState, useRef, useEffect } from 'react'
@@ -11,6 +11,10 @@ function Navbar({ cartCount, isLoggedIn, setIsLoggedIn, currentUser, userProfile
 
   const handleLogout = async () => {
     try {
+      // مسح بيانات التسجيل الوهمي
+      localStorage.removeItem('demoUser')
+      localStorage.removeItem('isLoggedIn')
+      
       await signOut(auth)
       if (setIsLoggedIn) setIsLoggedIn(false)
       setShowDropdown(false)
@@ -110,6 +114,15 @@ function Navbar({ cartCount, isLoggedIn, setIsLoggedIn, currentUser, userProfile
                       >
                         <UserCircle2 className="w-5 h-5 text-luxury-gold" />
                         <span className="font-semibold">الملف الشخصي</span>
+                      </Link>
+                      
+                      <Link
+                        to="/orders"
+                        onClick={() => setShowDropdown(false)}
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors text-gray-700"
+                      >
+                        <Package className="w-5 h-5 text-luxury-gold" />
+                        <span className="font-semibold">طلباتي</span>
                       </Link>
                       
                       <Link

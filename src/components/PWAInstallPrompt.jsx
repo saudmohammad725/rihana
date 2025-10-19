@@ -36,26 +36,124 @@ function PWAInstallPrompt() {
   }, [])
 
   const handleInstall = async () => {
+    // التحقق من نوع الجهاز
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+    const isAndroid = /Android/.test(navigator.userAgent)
+
     if (!deferredPrompt) {
       // للأجهزة التي لا تدعم beforeinstallprompt (iOS Safari)
-      alert('لتثبيت التطبيق:\n\n1. اضغط على زر المشاركة 📤\n2. اختر "إضافة إلى الشاشة الرئيسية" 📲')
-      setShowPrompt(false)
+      if (isIOS) {
+        // عرض تعليمات مفصّلة لـ iOS
+        const iosInstructions = document.createElement('div')
+        iosInstructions.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: white;
+          padding: 30px;
+          border-radius: 20px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+          z-index: 10000;
+          max-width: 90%;
+          text-align: center;
+          direction: rtl;
+        `
+        iosInstructions.innerHTML = `
+          <div style="font-size: 48px; margin-bottom: 20px;">📱</div>
+          <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #333;">
+            تثبيت تطبيق ريحانة
+          </h3>
+          <div style="text-align: right; margin: 20px 0; color: #666; line-height: 1.8;">
+            <div style="margin: 10px 0; display: flex; align-items: center; gap: 10px;">
+              <span style="background: #C9A961; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</span>
+              <span>اضغط على زر <strong>المشاركة</strong> 📤 في الأسفل</span>
+            </div>
+            <div style="margin: 10px 0; display: flex; align-items: center; gap: 10px;">
+              <span style="background: #C9A961; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</span>
+              <span>اختر <strong>"إضافة إلى الشاشة الرئيسية"</strong> ➕</span>
+            </div>
+            <div style="margin: 10px 0; display: flex; align-items: center; gap: 10px;">
+              <span style="background: #C9A961; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</span>
+              <span>اضغط على <strong>"إضافة"</strong> ✅</span>
+            </div>
+          </div>
+          <button onclick="this.parentElement.remove()" style="
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #C9A961 0%, #B8984F 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+          ">
+            فهمت!
+          </button>
+        `
+        document.body.appendChild(iosInstructions)
+        setShowPrompt(false)
+      } else {
+        // لباقي الأجهزة
+        alert('لتثبيت التطبيق:\n\n1. افتح قائمة المتصفح (⋮)\n2. اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"\n3. اتبع التعليمات')
+        setShowPrompt(false)
+      }
       return
     }
 
-    // إظهار نافذة التثبيت
-    deferredPrompt.prompt()
-    
-    // انتظار اختيار المستخدم
-    const { outcome } = await deferredPrompt.userChoice
-    
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt')
-      localStorage.setItem('pwa-never-show', 'true')
+    try {
+      // إظهار نافذة التثبيت التلقائية (Chrome/Android/Edge)
+      await deferredPrompt.prompt()
+      
+      // انتظار اختيار المستخدم
+      const { outcome } = await deferredPrompt.userChoice
+      
+      if (outcome === 'accepted') {
+        console.log('✅ تم تثبيت التطبيق بنجاح!')
+        
+        // عرض رسالة نجاح
+        const successMsg = document.createElement('div')
+        successMsg.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: white;
+          padding: 30px;
+          border-radius: 20px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+          z-index: 10000;
+          text-align: center;
+          animation: scaleIn 0.3s ease;
+        `
+        successMsg.innerHTML = `
+          <div style="font-size: 64px; margin-bottom: 15px;">🎉</div>
+          <h3 style="font-size: 22px; font-weight: bold; margin-bottom: 10px; color: #333;">
+            تم التثبيت بنجاح!
+          </h3>
+          <p style="color: #666; margin-bottom: 20px;">
+            يمكنك الآن فتح التطبيق من الشاشة الرئيسية
+          </p>
+        `
+        document.body.appendChild(successMsg)
+        
+        setTimeout(() => {
+          successMsg.remove()
+        }, 3000)
+        
+        localStorage.setItem('pwa-never-show', 'true')
+      } else {
+        console.log('❌ المستخدم ألغى التثبيت')
+      }
+      
+      setDeferredPrompt(null)
+      setShowPrompt(false)
+    } catch (error) {
+      console.error('خطأ في التثبيت:', error)
+      setShowPrompt(false)
     }
-    
-    setDeferredPrompt(null)
-    setShowPrompt(false)
   }
 
   const handleClose = () => {
