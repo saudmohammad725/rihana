@@ -14,6 +14,7 @@ import Cart from './pages/Cart'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
+import Booking from './pages/Booking'
 import Footer from './components/Footer'
 
 function App() {
@@ -114,10 +115,11 @@ function App() {
           <main className="flex-grow pb-20 md:pb-0">
             <Routes>
               <Route path="/" element={<Home isLoggedIn={isLoggedIn} userProfile={userProfile} />} />
-              <Route path="/workers" element={<Workers addToCart={addToCart} />} />
-              <Route path="/drivers" element={<Drivers addToCart={addToCart} />} />
-              <Route path="/trips" element={<Trips addToCart={addToCart} />} />
-              <Route path="/babysitters" element={<Babysitters addToCart={addToCart} />} />
+              <Route path="/workers" element={<Workers />} />
+              <Route path="/drivers" element={<Drivers />} />
+              <Route path="/trips" element={<Trips />} />
+              <Route path="/babysitters" element={<Babysitters />} />
+              <Route path="/booking/:serviceType" element={<Booking isLoggedIn={isLoggedIn} currentUser={currentUser} />} />
               <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} updateQuantity={updateQuantity} />} />
               <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
               <Route path="/register" element={<Register />} />

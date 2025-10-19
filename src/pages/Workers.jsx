@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { ShoppingCart, Star, Clock, Award } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Calendar, Star, Clock, Award } from 'lucide-react'
 
-function Workers({ addToCart }) {
+function Workers() {
+  const navigate = useNavigate()
   const [filter, setFilter] = useState('all')
 
   const workers = [
@@ -197,13 +199,12 @@ function Workers({ addToCart }) {
                     </div>
                   </div>
                   <button
-                    onClick={() => addToCart({ ...worker, type: 'عاملة' })}
+                    onClick={() => navigate('/booking/workers', { state: worker })}
                     className="bg-gradient-to-r from-luxury-gold to-luxury-darkGold hover:shadow-xl text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 flex items-center gap-2 group-hover:scale-105"
                   >
-                    <ShoppingCart className="w-5 h-5" />
-                    احجز
-                  </button>
-                </div>
+                    <Calendar className="w-5 h-5" />
+                    احجز الآن
+                  </button>                </div>
               </div>
             </div>
           ))}

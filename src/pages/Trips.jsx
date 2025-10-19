@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { ShoppingCart, Star, MapPin, Users, Clock } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Calendar, Star, MapPin, Users, Clock } from 'lucide-react'
 
-function Trips({ addToCart }) {
+function Trips() {
+  const navigate = useNavigate()
   const [filter, setFilter] = useState('all')
 
   const trips = [
@@ -202,10 +204,10 @@ function Trips({ addToCart }) {
                     <span className="text-gray-500 mr-2">ريال/رحلة</span>
                   </div>
                   <button
-                    onClick={() => addToCart({ ...trip, type: 'رحلة' })}
+                    onClick={() => navigate('/booking/trips', { state: trip })}
                     className="bg-luxury-gold hover:bg-luxury-darkGold text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center gap-2"
                   >
-                    <ShoppingCart className="w-5 h-5" />
+                    <Calendar className="w-5 h-5" />
                     احجز الآن
                   </button>
                 </div>

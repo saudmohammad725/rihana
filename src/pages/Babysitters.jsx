@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { ShoppingCart, Star, Award, Heart } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Calendar, Star, Award, Heart } from 'lucide-react'
 
-function Babysitters({ addToCart }) {
+function Babysitters() {
+  const navigate = useNavigate()
   const [filter, setFilter] = useState('all')
 
   const babysitters = [
@@ -196,10 +198,10 @@ function Babysitters({ addToCart }) {
                     <span className="text-gray-500 mr-2">ريال/ساعة</span>
                   </div>
                   <button
-                    onClick={() => addToCart({ ...babysitter, type: 'حاضنة' })}
+                    onClick={() => navigate('/booking/babysitters', { state: babysitter })}
                     className="bg-luxury-gold hover:bg-luxury-darkGold text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center gap-2"
                   >
-                    <ShoppingCart className="w-5 h-5" />
+                    <Calendar className="w-5 h-5" />
                     احجز الآن
                   </button>
                 </div>

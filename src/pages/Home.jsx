@@ -3,6 +3,12 @@ import { Users, Car, Compass, Baby, Clock, Shield, Star, Sparkles } from 'lucide
 import { useEffect, useRef } from 'react'
 import { analyticsAPI } from '../services/api'
 
+// Import local images
+import workersImage from '../images/sa.png'
+import driversImage from '../images/saa.png'
+import tripsImage from '../images/saaa.png'
+import babysittersImage from '../images/saaaa.png'
+
 function Home({ isLoggedIn, userProfile }) {
   const navigate = useNavigate()
   const observerRef = useRef(null)
@@ -318,50 +324,263 @@ function Home({ isLoggedIn, userProfile }) {
           </>
         ) : (
           <>
-            <div className="text-center mb-16 observe">
+            <div className="text-center mb-20 observe">
               <div className="inline-block">
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-                  الخدمات
+                <div className="inline-flex items-center gap-3 bg-luxury-gold/10 border border-luxury-gold/30 px-6 py-3 rounded-full mb-6">
+                  <Sparkles className="w-6 h-6 text-luxury-gold" />
+                  <span className="text-luxury-gold text-lg font-bold">خدماتنا المتميزة</span>
+                </div>
+                <h2 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
+                  اكتشف عالماً من الخدمات الفاخرة
                 </h2>
-                <div className="h-1 w-32 bg-gradient-gold mx-auto rounded-full"></div>
+                <div className="h-1.5 w-40 bg-gradient-gold mx-auto rounded-full"></div>
               </div>
-              <p className="text-xl text-gray-700 mt-6">
-                اختر الخدمة المناسبة لك من بين خدماتنا المميزة
+              <p className="text-xl md:text-2xl text-gray-700 mt-8 max-w-3xl mx-auto leading-relaxed">
+                نقدم لك أفضل الخدمات بأعلى معايير الجودة والاحترافية
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {categories.map((category, index) => {
-                const Icon = category.icon
-                return (
-                  <Link
-                    key={category.id}
-                    to={category.link}
-                    className="observe group relative overflow-hidden rounded-2xl luxury-card p-8 text-center category-card"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-luxury-gold/10 group-hover:bg-luxury-gold/15 mb-6 transition-all group-hover:rotate-12 duration-500">
-                      <Icon className="w-10 h-10 text-gray-700 group-hover:text-gray-900 transition-colors" />
+            {/* Services with Alternating Layout */}
+            <div className="max-w-7xl mx-auto space-y-32">
+              {/* Service 1 - Workers (Image Right, Text Left) */}
+              <div className="observe group">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                  {/* Text Content - Left */}
+                  <div className="order-2 lg:order-1 text-center lg:text-right space-y-6">
+                    <div className="inline-flex items-center gap-3 bg-luxury-navy/5 px-5 py-2.5 rounded-full">
+                      <Users className="w-5 h-5 text-luxury-navy" />
+                      <span className="text-luxury-navy text-sm font-bold">خدمة احترافية</span>
                     </div>
-                    <h3 className="text-2xl font-bold mb-3 text-gray-800 group-hover:text-gray-900 transition-colors">
-                      {category.title}
+                    
+                    <h3 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
+                      العاملات المنزليات
                     </h3>
-                    <p className="text-gray-600 group-hover:text-gray-700 transition-colors">
-                      {category.description}
+                    
+                    <p className="text-xl text-gray-600 leading-relaxed">
+                      احجز عاملة منزلية محترفة ومدربة لتنظيف منزلك بأعلى معايير الجودة. خدمة مرنة بالساعة تناسب احتياجاتك.
                     </p>
                     
-                    <div className="mt-6 inline-flex items-center text-luxury-gold group-hover:text-gray-800 transition-colors">
-                      <span className="text-sm font-semibold">اكتشف المزيد</span>
-                      <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <ul className="space-y-4 text-right">
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>عاملات مدربات ومؤهلات</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>خدمة مرنة بالساعة</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>أسعار تنافسية وشفافة</span>
+                      </li>
+                    </ul>
+                    
+                    <Link
+                      to="/workers"
+                      className="inline-flex items-center gap-3 bg-luxury-navy hover:bg-luxury-navy/90 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl"
+                    >
+                      <span>اكتشف المزيد</span>
+                      <svg className="w-5 h-5 transform group-hover:-translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                       </svg>
+                    </Link>
+                  </div>
+
+                  {/* Image - Right */}
+                  <div className="order-1 lg:order-2 relative">
+                    <div className="relative">
+                      {/* Main Image */}
+                      <div className="relative">
+                        <img 
+                          src={workersImage} 
+                          alt="خدمات العاملات المنزليات"
+                          className="w-full h-[650px] object-contain"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Service 2 - Drivers (Image Left, Text Right) */}
+              <div className="observe group">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                  {/* Image - Left */}
+                  <div className="relative">
+                    <div className="relative">
+                      {/* Main Image */}
+                      <div className="relative">
+                        <img 
+                          src={driversImage} 
+                          alt="خدمات السائقين"
+                          className="w-full h-[600px] object-contain"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Text Content - Right */}
+                  <div className="text-center lg:text-right space-y-6">
+                    <div className="inline-flex items-center gap-3 bg-luxury-gold/10 px-5 py-2.5 rounded-full">
+                      <Car className="w-5 h-5 text-luxury-gold" />
+                      <span className="text-luxury-gold text-sm font-bold">تنقل آمن</span>
                     </div>
                     
-                    {/* Shine effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 shine-effect"></div>
+                    <h3 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
+                      السائقون المحترفون
+                    </h3>
+                    
+                    <p className="text-xl text-gray-600 leading-relaxed">
+                      سائقون ذوو خبرة وكفاءة عالية لتوصيلك إلى وجهتك بأمان وراحة. خدمة تأجير مرنة بالساعة مع سيارات حديثة ونظيفة.
+                    </p>
+                    
+                    <ul className="space-y-4 text-right">
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>سائقون مرخصون وموثوقون</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>سيارات حديثة ونظيفة</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>خدمة 24/7 طوال الأسبوع</span>
+                      </li>
+                    </ul>
+                    
+                  <Link
+                      to="/drivers"
+                      className="inline-flex items-center gap-3 bg-luxury-gold hover:bg-luxury-darkGold text-white px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl"
+                    >
+                      <span>اكتشف المزيد</span>
+                      <svg className="w-5 h-5 transform group-hover:-translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Service 3 - Trips (Image Right, Text Left) */}
+              <div className="observe group">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                  {/* Text Content - Left */}
+                  <div className="order-2 lg:order-1 text-center lg:text-right space-y-6">
+                    <div className="inline-flex items-center gap-3 bg-slate-700/10 px-5 py-2.5 rounded-full">
+                      <Compass className="w-5 h-5 text-slate-700" />
+                      <span className="text-slate-700 text-sm font-bold">مغامرات لا تُنسى</span>
+                    </div>
+                    
+                    <h3 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
+                      الرحلات الترفيهية
+                    </h3>
+                    
+                    <p className="text-xl text-gray-600 leading-relaxed">
+                      استمتع برحلات ترفيهية مميزة وآمنة لجميع أفراد العائلة. من الرحلات الصحراوية إلى الجولات السياحية، نوفر لك تجربة لا تُنسى.
+                    </p>
+                    
+                    <ul className="space-y-4 text-right">
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>برامج سياحية متنوعة</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>مرشدون سياحيون محترفون</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>أنشطة ترفيهية ممتعة</span>
+                      </li>
+                    </ul>
+                    
+                    <Link
+                      to="/trips"
+                      className="inline-flex items-center gap-3 bg-slate-700 hover:bg-slate-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl"
+                    >
+                      <span>اكتشف المزيد</span>
+                      <svg className="w-5 h-5 transform group-hover:-translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </Link>
+                  </div>
+
+                  {/* Image - Right */}
+                  <div className="order-1 lg:order-2 relative">
+                    <div className="relative">
+                      {/* Main Image */}
+                      <div className="relative">
+                        <img 
+                          src={tripsImage} 
+                          alt="الرحلات الترفيهية"
+                          className="w-full h-[600px] object-contain"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Service 4 - Babysitters (Image Left, Text Right) */}
+              <div className="observe group">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                  {/* Image - Left */}
+                  <div className="relative">
+                    <div className="relative">
+                      {/* Main Image */}
+                      <div className="relative">
+                        <img 
+                          src={babysittersImage} 
+                          alt="حاضنات الأطفال"
+                          className="w-full h-[600px] object-contain"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Text Content - Right */}
+                  <div className="text-center lg:text-right space-y-6">
+                    <div className="inline-flex items-center gap-3 bg-amber-700/10 px-5 py-2.5 rounded-full">
+                      <Baby className="w-5 h-5 text-amber-700" />
+                      <span className="text-amber-700 text-sm font-bold">رعاية متخصصة</span>
+                    </div>
+                    
+                    <h3 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
+                      حاضنات الأطفال
+                    </h3>
+                    
+                    <p className="text-xl text-gray-600 leading-relaxed">
+                      حاضنات أطفال موثوقات ومدربات على أعلى مستوى لرعاية أطفالك بكل حب واهتمام. نضمن لك راحة البال وأنت تعلم أن أطفالك بأيدٍ أمينة.
+                    </p>
+                    
+                    <ul className="space-y-4 text-right">
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>حاضنات مؤهلات ومدربات</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>خبرة في رعاية الأطفال</span>
+                      </li>
+                      <li className="flex items-center gap-3 text-gray-700 text-lg">
+                        <div className="w-2 h-2 rounded-full bg-luxury-gold"></div>
+                        <span>متابعة مستمرة وتقارير</span>
+                      </li>
+                    </ul>
+                    
+                    <Link
+                      to="/babysitters"
+                      className="inline-flex items-center gap-3 bg-amber-700 hover:bg-amber-800 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-xl hover:shadow-2xl"
+                    >
+                      <span>اكتشف المزيد</span>
+                      <svg className="w-5 h-5 transform group-hover:-translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
                   </Link>
-                )
-              })}
+                  </div>
+                </div>
+              </div>
             </div>
           </>
         )}
@@ -387,19 +606,16 @@ function Home({ isLoggedIn, userProfile }) {
               const Icon = feature.icon
               return (
                 <div key={index} className="observe text-center group feature-card" style={{ animationDelay: `${index * 0.15}s` }}>
-                  <div className="relative inline-flex items-center justify-center w-32 h-32 rounded-2xl bg-white luxury-shadow mb-6 group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-110 group-hover:-rotate-6 border border-luxury-gold/20 overflow-hidden">
-                    {/* Gradient Background */}
-                    <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
+                  <div className="relative inline-flex items-center justify-center w-32 h-32 rounded-2xl bg-white luxury-shadow mb-6 transition-all duration-300 transform group-hover:scale-105 border border-luxury-gold/20 overflow-hidden">
                     {/* Icon */}
                     <div className="relative z-10">
-                      <Icon className="w-16 h-16 text-luxury-gold group-hover:text-white transition-colors duration-500 group-hover:scale-110" />
+                      <Icon className="w-16 h-16 text-luxury-gold transition-colors duration-300" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-3 group-hover:text-luxury-gold transition-colors duration-300">
+                  <h3 className="text-2xl font-bold text-gray-800 mb-3 transition-colors duration-200">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 text-lg group-hover:text-gray-700 transition-colors duration-300">
+                  <p className="text-gray-600 text-lg transition-colors duration-200">
                     {feature.description}
                   </p>
                 </div>
