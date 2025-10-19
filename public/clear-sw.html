@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تحديث Service Worker - ريحانة</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 500px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    #status {
+      font-size: 18px;
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+    .loading {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .btn {
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #C9A961 0%, #B8984F 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔄 تحديث التطبيق</h1>
+    <div id="status" class="loading">جاري التحديث...</div>
+    <button id="reloadBtn" class="btn" style="display: none;">العودة للموقع</button>
+  </div>
+
+  <script>
+    const statusDiv = document.getElementById('status')
+    const reloadBtn = document.getElementById('reloadBtn')
+
+    async function clearServiceWorkers() {
+      try {
+        if ('serviceWorker' in navigator) {
+          // Get all registrations
+          const registrations = await navigator.serviceWorker.getRegistrations()
+          
+          if (registrations.length === 0) {
+            statusDiv.textContent = 'لا يوجد Service Worker لحذفه'
+            statusDiv.className = 'success'
+            setTimeout(() => {
+              window.location.href = '/'
+            }, 2000)
+            return
+          }
+
+          // Unregister all
+          statusDiv.textContent = `جاري حذف ${registrations.length} Service Worker...`
+          
+          for (let registration of registrations) {
+            await registration.unregister()
+            console.log('✅ Service Worker unregistered')
+          }
+
+          // Clear all caches
+          statusDiv.textContent = 'جاري حذف الذاكرة المؤقتة...'
+          const cacheNames = await caches.keys()
+          
+          for (let cacheName of cacheNames) {
+            await caches.delete(cacheName)
+            console.log('🗑️ Cache deleted:', cacheName)
+          }
+
+          // Success
+          statusDiv.textContent = '✅ تم التحديث بنجاح! جاري إعادة التحميل...'
+          statusDiv.className = 'success'
+          
+          // Reload after 2 seconds
+          setTimeout(() => {
+            window.location.href = '/'
+          }, 2000)
+
+        } else {
+          statusDiv.textContent = 'المتصفح لا يدعم Service Workers'
+          statusDiv.className = 'error'
+          reloadBtn.style.display = 'block'
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        statusDiv.textContent = '❌ حدث خطأ: ' + error.message
+        statusDiv.className = 'error'
+        reloadBtn.style.display = 'block'
+      }
+    }
+
+    reloadBtn.addEventListener('click', () => {
+      window.location.href = '/'
+    })
+
+    // Start automatically
+    clearServiceWorkers()
+  </script>
+</body>
+</html>
+
