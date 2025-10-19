@@ -16,6 +16,7 @@ import Register from './pages/Register'
 import Profile from './pages/Profile'
 import Booking from './pages/Booking'
 import Footer from './components/Footer'
+import PWAInstallPrompt from './components/PWAInstallPrompt'
 
 function App() {
   const [cart, setCart] = useState([])
@@ -36,7 +37,7 @@ function App() {
           const response = await authAPI.getProfile(user.uid)
           setUserProfile(response.user)
         } catch (error) {
-          console.error('Error fetching user profile:', error)
+          // Silently ignore profile fetch errors if server is not running
         }
       } else {
         setIsLoggedIn(false)
@@ -92,7 +93,7 @@ function App() {
   }
 
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <div className="min-h-screen flex flex-col relative">
         {/* Animated Waves Background */}
         <div className="wave">
@@ -135,6 +136,7 @@ function App() {
           />
         </div>
       </div>
+      <PWAInstallPrompt />
     </Router>
   )
 }
